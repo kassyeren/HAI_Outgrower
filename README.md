@@ -1,2 +1,2 @@
 # HAI_Outgrower
-A display of out-grower farms for HAI. 
+A dashboard display of out-grower farms for HAI. 
