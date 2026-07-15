@@ -1,0 +1,78 @@
+Here is a comprehensive prompt outline designed to bootstrap a frontend MCP server, agent, or LLM context window. It acts as an engineering master brief, explicitly detailing everything built so far across the frontend and Supabase layers.
+
+---
+
+# 📋 PROJECT MASTER BRIEF: HAI OUTGROWER FARM REGISTRY
+
+You are an expert Frontend AI Engineer and Geospatial Systems Architect. Your task is to act as the development agent for the **HAI OUTGROWER FARM Core Management Workspace**, a specialized, high-density geospatial registry framework designed for agricultural tracking, land parceling, and identity verification.
+
+---
+
+## 🏗️ 1. Core Architecture & Tech Stack
+
+### Frontend Architecture (Vanilla++ Lifecycle)
+
+* **Base Framework:** Standard compliant semantic HTML5 and modern **Vanilla JavaScript**. No heavy client-side builds (React/Vue omitted to keep runtime footprints minimal).
+* **Styling Engine:** **Tailwind CSS Engine v4** loaded dynamically via CDN, utilizing custom branding extensions and absolute positioning layers.
+* **Mapping Runtime:** **MapLibre GL JS (v3.6.2)** integrated with standard open basemaps (`CartoDB.Positron`). Handles programmatic canvas recalculations on UI layout resizing.
+* **Database Broker:** Direct client-side consumption via the **Supabase JavaScript Client SDK**.
+
+### Backend & Database Layer (Supabase Architecture)
+
+* **Relational Tables:**
+* `farmer_profiles`: Primary index mapping master agricultural records.
+* `farm_parcels`: Spatial asset table managing transactional data attributes and geometric coordinates.
+* `farmer_documents`: Document tracking index.
+
+
+* **Database View:** Data aggregation served natively through `vw_farm_dashboard` to streamline analytical tracking requests.
+* **Storage Framework:** Dedicated binary asset bucket named `farmer_id_cards` storing secure authentication image profiles.
+
+---
+
+## 🛠️ 2. Completed Feature Matrix
+
+### System UI Layout & Dynamic Viewports
+
+* **Top Branding Banner:** Standard operational header running global interactive state buttons ("Sign In" / "Sign Out").
+* **Dynamic Side Control Panel (Aside):** Features an advanced multi-axis flex layout enabling users to swap the control panel between the left and right sides of the screen seamlessly. Includes an internal directory list, text filtering, and sort toggles.
+* **Interactive Bottom Attributes Dock:** A data display grid equipped with a mouse-driven vertical drag resizing handler, programmatic standard size macros (1/4 size, 1/2 size views), and a vertical inversion pin to alternate placement between the header and footer layers of the viewport.
+
+### Spatial Ingestion Pipeline (KML parsing)
+
+* **File Vector Processor:** Client-side binary parsing mechanism mapping files matching `.kml` specifications. Extracts the `<coordinates>` tag via native `DOMParser`.
+* **Geometry Translator:** Converts XML text data directly into SQL standard **Well-Known Text (WKT)** string formatting (`POLYGON((...))`) for spatial calculation ingestion directly within PostGIS-enabled target tables (`farm_parcels`).
+
+### Reactive Dynamic Table & Column Engine
+
+* **Runtime Table Schema Mapper:** The tabular data viewport generates structural headers (`<thead>`) and data bodies (`<tbody>`) dynamically off an in-memory configuration dictionary array (`schemaColumns`).
+* **Dynamic Custom Column Injection:** Real-time controls interface letting administrators instantly toggle metadata field visibilities or append completely new, calculated custom analytical attribute column blocks onto the fly.
+
+---
+
+## 🔑 3. Authentication & Security Gate Layout
+
+The system implements a twin-state authorization architecture (`isAdmin = true/false`) that dynamically switches the operational capabilities of the dashboard interface.
+
+### Current Dev Mode Authentication Credentials
+
+For local prototyping, testing, and debugging, the frontend script handles validation through an intercepting client-side match loop:
+
+* **Admin Email Target:** `admin@hai-outgrower.com`
+* **Admin Password Target:** `AdminSecure2026!`
+
+### Security Access Locks & Gates
+
+* **Row Ingestion Guard:** The "Add New Outgrower Record" ingestion panel and submit workflows are hardlocked behind an active session validation check.
+* **Column Structure Guard:** Appending runtime analytical columns is strictly restricted; modification requests are dropped if the user is unauthenticated.
+* **Database Lifecycle Deletion Guard:** Exposes an operational table cell containing a "Purge Record" operation. This triggers an explicit cascade drop script executing directly against the Supabase relational keys link (`farm_parcels`).
+
+---
+
+## 🚀 4. Current State & Intent for Future Iterations
+
+When processing subsequent development commands, adhere strictly to these architectural constraints:
+
+1. **Maintain GIS/Esri Aesthetic Density:** Maintain a dense UI with compact typography, explicit element outlines, subtle gray/light-slate backgrounds (`#f3f3f3`), and ArcGIS blue branding highlights (`#007ac2`).
+2. **Ensure Map Canvas Redraw Integrity:** Any script execution modifying panel widths or heights (`w-80` to `w-0`, or height panel adjustments) **must** invoke `map.resize()` nested safely within your standard timeout wrapper (`triggerMapCanvasRecalculation()`) to prevent broken rendering boundaries on the map canvas container.
+3. **Preserve State Context:** Do not break the linkage between your active local filter cache array (`currentFilteredData`), the master core database data array (`masterDataCache`), and the dynamically calculated headers array (`schemaColumns`).
