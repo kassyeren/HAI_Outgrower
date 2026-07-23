@@ -773,8 +773,19 @@ function toggleSidePanelVisibility(shouldCollapse) {
         const safeIdName = name.toLowerCase().replace(/ /g, "_");
         const bucketStoragePath = `farmer_id_cards/${safeIdName}_id.${fileExt}`;
 
-        const { error: storageErr } = await supabaseClient.storage.from('farmer_id_cards').upload(bucketStoragePath, idFile, { upsert: true });
-        if(storageErr) throw storageErr;
+        const { data: uploadData, error: storageErr } = await supabaseClient.storage
+          .from('farmer_id_cards')
+          .upload(bucketStoragePath, idFile, {
+            cacheControl: '3600',
+            upsert: true
+          });
+
+        if (storageErr) {
+          console.error('Upload Error:', storageErr.message);
+          throw storageErr;
+        } else {
+          console.log('File uploaded successfully:', uploadData);
+        }
 
         const { error: pError } = await supabaseClient.from('farmer_profiles').upsert({ farmer_name: name, farm_dist: dist });
         if(pError) throw pError;
@@ -809,8 +820,7 @@ function toggleSidePanelVisibility(shouldCollapse) {
     }
     function closeAttributeCard() {
       document.getElementById('attribute-card').classList.add('hidden');
-    }
-    // ==========================================
+    }    // ==========================================
 // 7. ADMINISTRATIVE PRIVILEGE MANAGEMENT
 // ==========================================
 
