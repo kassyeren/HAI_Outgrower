@@ -89,33 +89,39 @@
       </div>
 
       <!-- SEARCH, SORT, AND INTERACTIVE OPERATIVE PROPERTIES -->
-      <div class="p-4 space-y-4 flex-1 overflow-y-auto bg-white">
-        <button id="append-btn" onclick="toggleForm()" class="w-full opacity-50 pointer-events-none bg-[#007ac2] hover:bg-[#005e95] text-white text-xs font-bold py-2 rounded-sm border border-[#005e95] transition-all cursor-pointer text-center shadow-2xs">
-         Add New Outgrower Record
-        </button>
+      <div id="ingest-form" style="max-width: 600px; padding: 20px; font-family: sans-serif;">
+  <h2>Farmer Registration & Farm Batch Ingest</h2>
 
-        <div class="h-px bg-[#e0e0e0]"></div>
+  <!-- Farmer Information (1 ID Card per Farmer) -->
+  <fieldset style="margin-bottom: 20px;">
+    <legend><b>1. Farmer Profile</b></legend>
+    <label>Farmer Full Name:</label><br>
+    <input type="text" id="farmerName" required style="width: 100%; margin-bottom: 10px;"><br>
 
-        <!-- Filter Input Parameter Form -->
-        <div class="space-y-1.5">
-          <label class="text-[11px] font-bold text-[#595959] uppercase tracking-tight block">Filter Ledger Records</label>
-          <div class="relative">
-            <input type="text" id="search-bar" oninput="handleSearchAndSort()" placeholder="Type farmer name..." class="w-full bg-white border border-[#949494] rounded-sm px-2.5 py-1.5 text-xs text-[#323232] placeholder-[#767676] focus:outline-none focus:border-[#007ac2]" />
-          </div>
-        </div>
-        
-        <!-- Sorting Criteria Parameter Matrix -->
-        <div class="space-y-1.5">
-          <label class="text-[11px] font-bold text-[#595959] uppercase tracking-tight block">Sort Active Attributes</label>
-          <select id="sort-dropdown" onchange="handleSearchAndSort()" class="w-full bg-white border border-[#949494] rounded-sm px-2 py-1.5 text-xs text-[#323232] focus:outline-none focus:border-[#007ac2] cursor-pointer">
-            <option value="size-desc">Farm Size (Largest First)</option>
-            <option value="size-asc">Farm Size (Smallest First)</option>
-            <option value="name-asc">Farmer Name: A to Z</option>
-            <option value="name-desc">Farmer Name: Z to A</option>
-            <option value="dist-asc">District Name: A to Z</option>
-          </select>
-        </div>
+    <label>National ID Number:</label><br>
+    <input type="text" id="nationalId" required style="width: 100%; margin-bottom: 10px;"><br>
 
+    <label>Upload ID Card Image:</label><br>
+    <input type="file" id="idCardFile" accept="image/*" style="margin-bottom: 10px;">
+  </fieldset>
+
+  <!-- Multiple Farms Container -->
+  <fieldset>
+    <legend><b>2. Farms (Batch Add)</b></legend>
+    <div id="farmsList">
+      <!-- Dynamic farm entries appear here -->
+    </div>
+
+    <button type="button" id="addFarmBtn" style="background: #28a745; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; margin-top: 10px;">
+      + Add Another Farm
+    </button>
+  </fieldset>
+
+  <br>
+  <button type="button" id="submitBatchBtn" style="width: 100%; background: #007bff; color: white; border: none; padding: 12px; font-size: 16px; cursor: pointer; border-radius: 4px;">
+    Submit Farmer & All Farms
+  </button>
+</div>
         <!-- Active Feature Item Directory List -->
         <div class="pt-2">
           <span class="text-[11px] font-bold text-[#595959] uppercase tracking-tight block mb-2">Features Ledger Directory</span>
@@ -240,45 +246,61 @@
     </div>
 
     <!-- DATA INGESTION MODAL OVERLAY PANEL -->
-    <div id="ingestion-drawer" class="hidden absolute top-0 left-0 w-80 h-full bg-white border-r border-[#949494] shadow-2xl p-4 z-50 flex flex-col overflow-y-auto transition-all duration-200">
-      <div class="flex justify-between items-center mb-4 border-b border-[#e0e0e0] pb-2">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-[#323232]"> Ingestion Panel</h2>
-        <button onclick="toggleForm()" class="text-[#767676] hover:text-[#323232] text-xs font-bold cursor-pointer">✕ Close</button>
-      </div>
-      
-      <form onsubmit="handleInjestSubmit(event)" class="space-y-3.5 text-xs flex-1">
-        <div>
-          <label class="block text-[11px] font-bold text-[#595959] uppercase tracking-tight mb-1">Farmer Name</label>
-          <input type="text" id="form-name" required class="w-full bg-white border border-[#949494] rounded-sm px-2 py-1 text-[#323232] focus:outline-none focus:border-[#007ac2]" />
-        </div>
-        <div>
-          <label class="block text-[11px] font-bold text-[#595959] uppercase tracking-tight mb-1">Farm Locality</label>
-          <input type="text" id="form-loc" required placeholder="e.g. Sector 4 West Crossroads" class="w-full bg-white border border-[#949494] rounded-sm px-2 py-1 text-[#323232] focus:outline-none focus:border-[#007ac2]" />
-        </div>
-        <div>
-          <label class="block text-[11px] font-bold text-[#595959] uppercase tracking-tight mb-1">Administrative District</label>
-          <input type="text" id="form-dist" required placeholder="e.g. Sefwi-Wiawso" class="w-full bg-white border border-[#949494] rounded-sm px-2 py-1 text-[#323232] focus:outline-none focus:border-[#007ac2]" />
-        </div>
-        
-        <!-- EXPLICIT INPUT RECORD COMPONENT FOR MANUAL FARM SIZE FIELD -->
-        <div>
-          <label class="block text-[11px] font-bold text-[#595959] uppercase tracking-tight mb-1">Farm Size (Manual Entry Acres Value)</label>
-          <input type="number" id="form-size" step="0.01" min="0" required placeholder="e.g. 14.25" class="w-full bg-white border border-[#949494] rounded-sm px-2 py-1 text-[#323232] focus:outline-none focus:border-[#007ac2]" />
-        </div>
+    <div id="ingest-form" style="max-width: 650px; padding: 20px; font-family: system-ui, sans-serif;">
+      <h2>Farmer Registration & Farm Batch Ingest</h2>
 
-        <div>
-          <label class="block text-[11px] font-bold text-[#595959] uppercase tracking-tight mb-1">Farm Boundary (.KML)</label>
-          <input type="file" id="form-kml" accept=".kml" required class="w-full text-xs text-[#595959] file:mr-3 file:py-1 file:px-2.5 file:rounded-sm file:border file:border-[#949494] file:bg-[#f3f3f3] file:text-[#323232] hover:file:bg-[#e5e5e5] file:cursor-pointer" />
-        </div>
-        <div>
-          <label class="block text-[11px] font-bold text-[#595959] uppercase tracking-tight mb-1">Identity Document Attachment Photo Image</label>
-          <input type="file" id="form-id" accept="image/*" required class="w-full text-xs text-[#595959] file:mr-3 file:py-1 file:px-2.5 file:rounded-sm file:border file:border-[#949494] file:bg-[#f3f3f3] file:text-[#323232] hover:file:bg-[#e5e5e5] file:cursor-pointer" />
-        </div>
+      <!-- 1. Farmer Profile -->
+      <fieldset style="margin-bottom: 20px; border-radius: 6px; padding: 15px;">
+        <legend><b>1. Farmer Profile</b></legend>
         
-        <button type="submit" id="submit-btn" class="w-full mt-4 bg-[#007ac2] hover:bg-[#005e95] text-white font-bold py-2 rounded-sm border border-[#005e95] transition-colors cursor-pointer text-center shadow-xs">
-          Synchronize Data Entry
+        <label>Farmer Full Name:</label>
+        <input type="text" id="farmerName" required style="width: 96%; padding: 8px; margin-top: 4px; margin-bottom: 12px;">
+
+        <label>National ID Number:</label>
+        <input type="text" id="nationalId" required style="width: 96%; padding: 8px; margin-top: 4px; margin-bottom: 12px;">
+
+        <!-- ID Card Modal Trigger Button -->
+        <div style="margin-top: 8px;">
+          <button type="button" id="openModalBtn" style="background: #4A5568; color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer;">
+            Upload ID Card
+          </button>
+          <span id="uploadStatusText" style="margin-left: 10px; font-size: 14px; color: #718096;">No file selected</span>
+        </div>
+      </fieldset>
+
+      <!-- 2. Farms Container (Dynamic Batch) -->
+      <fieldset style="border-radius: 6px; padding: 15px;">
+        <legend><b>2. Farm List</b></legend>
+        <div id="farmsList"></div>
+
+        <button type="button" id="addFarmBtn" style="background: #38A169; color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer;">
+          + Add Another Farm
         </button>
-      </form>
+      </fieldset>
+
+      <br>
+      <button type="button" id="submitBatchBtn" style="width: 100%; background: #3182CE; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer;">
+        Submit
+      </button>
+    </div>
+
+    <!-- FILE UPLOAD MODAL DIALOGUE BOX -->
+    <div id="uploadModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+      <div style="background: white; padding: 25px; border-radius: 8px; width: 380px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="margin-top: 0;">Upload Farmer ID Card</h3>
+        <p style="font-size: 14px; color: #666;">Select an image file (PNG, JPG) from your device.</p>
+
+        <!-- Custom File Drop/Click Zone -->
+        <label for="idCardFile" style="display: block; border: 2px dashed #CBD5E0; padding: 25px; border-radius: 6px; cursor: pointer; background: #F7FAFC; margin-bottom: 15px;">
+          <span id="modalFileName">Click to browse or drop file here</span>
+          <input type="file" id="idCardFile" accept="image/*" style="display: none;">
+        </label>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" id="closeModalBtn" style="background: #E2E8F0; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Cancel</button>
+          <button type="button" id="confirmUploadBtn" style="background: #3182CE; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Attach File</button>
+        </div>
+      </div>
     </div>
   </div>
 
