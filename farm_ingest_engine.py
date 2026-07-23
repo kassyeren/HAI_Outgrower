@@ -7,7 +7,7 @@ from supabase import create_client, Client
 # Enable KML driver layer inside fiona
 fiona.drvsupport.supported_drivers['KML'] = 'rw'
 
-SUPABASE_URL = https://zuuwkfxphpknuenmavta.supabase.co
+SUPABASE_URL = https://zuuwkfxphpknuenmavta.supabase.co/rest/v1/
 SUPABASE_KEY = sb_publishable_ZvAEDqVPsJpPdrP9NkAQHQ_XKMbCxcD # Service role key bypasses RLS rules during backend import
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
